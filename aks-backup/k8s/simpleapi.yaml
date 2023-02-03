@@ -1,0 +1,64 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: simple-api-pv-claim
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: "managed-csi-premium"
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple-api-server
+  labels:
+    app: simple-api-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simple-api-server
+  template:
+    metadata:
+      labels:
+        app: simple-api-server
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+        - name: server
+          image: "msazuredev.azurecr.io/simpleapi:1.0"
+          imagePullPolicy: Always
+          volumeMounts:
+          - mountPath: "/mnt/pv"
+            name: simple-api-volume
+          resources:
+            requests:
+              memory: "50Mi"
+              cpu: "300m"
+            limits:
+              memory: "50Mi"
+              cpu: "300m"
+          lifecycle: 
+            preStop:
+              httpGet:
+                path: /api/podTerminate
+                port: 3000
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /api/podReady
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /api/podReady
+              port: http
+      volumes:
+        - name: simple-api-volume
+          persistentVolumeClaim:
+            claimName: simple-api-pv-claim

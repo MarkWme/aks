@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple-api-server
+  labels:
+    app: simple-api-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simple-api-server
+  template:
+    metadata:
+      labels:
+        app: simple-api-server
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+        - name: server
+          image: "msazuredev.azurecr.io/simpleapi:1.0"
+          imagePullPolicy: Always
+          volumeMounts:
+          - mountPath: "/mnt/pv"
+            name: simple-api-volume
+          resources:
+            requests:
+              memory: "50Mi"
+              cpu: "300m"
+            limits:
+              memory: "50Mi"
+              cpu: "300m"
+          lifecycle: 
+            preStop:
+              httpGet:
+                path: /api/podTerminate
+                port: 3000
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /api/podReady
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /api/podReady
+              port: http
+      volumes:
+        - name: simple-api-volume
+          azureDisk:
+            kind: Managed
+            diskURI: /subscriptions/39bd7eca-016b-42af-b637-05b1bb362479/resourceGroups/mc_aks-ivryo_aks-ivryo-2_westeurope/providers/Microsoft.Compute/disks/pvcdisk
+            diskName: simple-api-pv-claim
