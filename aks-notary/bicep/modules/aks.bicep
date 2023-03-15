@@ -37,6 +37,7 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2022-09-01' = {
         type: 'VirtualMachineScaleSets'
         mode: 'System'
         vmSize: nodeSku
+        osSKU: 'Mariner'
         orchestratorVersion: kubernetesVersion
         vnetSubnetID: nodeSubnetId
         podSubnetID: podSubnetId

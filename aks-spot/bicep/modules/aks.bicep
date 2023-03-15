@@ -34,6 +34,7 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2022-09-01' = {
         name: 'sys'
         count: nodeCount
         osType: 'Linux'
+        osSKU: 'Mariner'
         type: 'VirtualMachineScaleSets'
         mode: 'System'
         vmSize: nodeSku
@@ -45,6 +46,7 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2022-09-01' = {
         name: 'spt'
         count: nodeCount
         osType: 'Linux'
+        osSKU: 'Mariner'
         type: 'VirtualMachineScaleSets'
         mode: 'User'
         scaleSetPriority: 'Spot'
