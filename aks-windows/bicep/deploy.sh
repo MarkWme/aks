@@ -4,10 +4,12 @@
 # AKS cluster
 #
 location=westeurope
+keyVaultName=msazuredev
+keyVaultResourceGroup=shared
 #
 # Choose random name for resources
 #
-name=aks-$(cat /dev/urandom | base64 | tr -dc '[:lower:]' | fold -w ${1:-5} | head -n 1) 2> /dev/null
+name=aks-$(cat /dev/urandom | base64 | tr -dc '[:lower:]' | fold -w ${1:-5} | head -n 1) 2>/dev/null
 #
 # Calculate next available network address space
 #
@@ -23,9 +25,8 @@ aksSubnetPrefix=10.${networkNumber}.0.0/24
 #
 # Get current latest (preview) version of Kubernetes
 #
-version=$(az aks get-versions -l $location --query "orchestrators[-1].orchestratorVersion" -o tsv)  2>/dev/null
+version=$(az aks get-versions -l $location | jq -r "(.values[].patchVersions) | keys | .[]" | sort | tail -n 1) 2>/dev/null
 
-version=1.25.5
 #
 # Create resource group
 #
@@ -39,5 +40,7 @@ az deployment group create \
         name=$name \
         networkNumber=$networkNumber \
         kubernetesVersion=$version \
+        keyVaultName=$keyVaultName \
+        keyVaultResourceGroup=$keyVaultResourceGroup \
     -o table
 
