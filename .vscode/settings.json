@@ -1,0 +1,8 @@
+{
+    "terminal.integrated.env.osx": {
+        "PATH": "/Users/mark/.azurelogicapps/dependencies/DotNetSDK:${env:PATH}"
+    },
+    "omnisharp.dotNetCliPaths": [
+        "/Users/mark/.azurelogicapps/dependencies/DotNetSDK"
+    ]
+}

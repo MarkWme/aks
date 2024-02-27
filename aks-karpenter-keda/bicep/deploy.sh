@@ -1,9 +1,9 @@
 #!/bin/zsh
-
+set -e
 #
 # AKS cluster
 #
-location=westeurope
+location=uksouth
 #
 # Choose random name for resources
 #
@@ -39,3 +39,4 @@ az deployment group create \
         kubernetesVersion=$version \
     -o table
 
+az aks get-credentials -n $name -g $name --overwrite-existing
