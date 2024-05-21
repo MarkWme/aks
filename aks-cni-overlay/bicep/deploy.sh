@@ -1,5 +1,5 @@
 #!/bin/zsh
-set -e
+
 #
 # AKS cluster
 #
@@ -11,19 +11,19 @@ name=aks-$(cat /dev/urandom | base64 | tr -dc '[:lower:]' | fold -w ${1:-5} | he
 #
 # Calculate next available network address space
 #
-# number=0
-# number=$(az network vnet list --query "[].addressSpace.addressPrefixes" -o tsv | cut -d . -f 2 | sort | tail -n 1)
-# if [[ -z $number ]]
-# then
-    # number=0
-# fi
-# networkNumber=$(expr $number + 1)
-# virtualNetworkPrefix=10.${networkNumber}.0.0/16
-# aksSubnetPrefix=10.${networkNumber}.0.0/24
+number=0
+number=$(az network vnet list --query "[].addressSpace.addressPrefixes" -o tsv | cut -d . -f 2 | sort | tail -n 1)
+if [[ -z $number ]]
+then
+    number=0
+fi
+networkNumber=$(expr $number + 1)
+virtualNetworkPrefix=10.${networkNumber}.0.0/16
+aksSubnetPrefix=10.${networkNumber}.0.0/24
 #
 # Get current latest (preview) version of Kubernetes
 #
-version=$(az aks get-versions -l $location | jq -r "(.values[].patchVersions) | keys | .[]" | sort | tail -n 1) 2>/dev/null
+version=$(az aks get-versions -l $location --query "orchestrators[-1].orchestratorVersion" -o tsv)  2>/dev/null
 #
 # Create resource group
 #
@@ -35,7 +35,7 @@ az deployment group create \
     -f ./main.bicep \
     --parameters \
         name=$name \
+        networkNumber=$networkNumber \
         kubernetesVersion=$version \
     -o table
 
-az aks get-credentials -n $name -g $name --overwrite-existing

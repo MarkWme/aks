@@ -2,11 +2,11 @@ param name string
 param location string
 param kubernetesVersion string
 param nodeCount int
-// param nodeSubnetId string
+param nodeSubnetId string
 param identityId string
 param nodeSku string = 'Standard_D2s_v3'
 
-resource aksCluster 'Microsoft.ContainerService/managedClusters@2023-09-02-preview' = {
+resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-02-01' = {
   name: name
   location: location
   identity: {
@@ -32,24 +32,16 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2023-09-02-previ
     }
     agentPoolProfiles: [
       {
-        name: 'system'
+        name: 'sys'
         count: nodeCount
         osType: 'Linux'
+        osSKU: 'AzureLinux'
         type: 'VirtualMachineScaleSets'
         mode: 'System'
         vmSize: nodeSku
-        osSKU: 'AzureLinux'
         orchestratorVersion: kubernetesVersion
-        // vnetSubnetID: nodeSubnetId
+        vnetSubnetID: nodeSubnetId
       }
     ]
-    nodeProvisioningProfile: {
-      mode: 'Auto'
-    }
-    workloadAutoScalerProfile: {
-      keda: {
-        enabled: true
-      }
-    }
   }
 }
