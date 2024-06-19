@@ -7,7 +7,7 @@ param clusterCount int
 var podSubnetNames = [for i in range(1, clusterCount): '${name}-pod-subnet-${i}']
 var subnetNames = concat(array('${name}-node-subnet'), podSubnetNames)
   
-resource aksVirtualNetwork 'Microsoft.Network/virtualNetworks@2022-07-01' = {
+resource aksVirtualNetwork 'Microsoft.Network/virtualNetworks@2023-11-01' = {
   name: '${name}-network'
   location: location
   properties: {

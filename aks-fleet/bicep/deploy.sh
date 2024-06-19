@@ -3,7 +3,7 @@
 #
 # AKS cluster
 #
-primaryLocation=westeurope
+primaryLocation=uksouth
 secondaryLocation=northeurope
 #
 # Choose random name for resources

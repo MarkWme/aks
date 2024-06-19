@@ -1,7 +1,7 @@
 param name string
 param location string
 
-resource aksFleet 'Microsoft.ContainerService/fleets@2022-09-02-preview' = {
+resource aksFleet 'Microsoft.ContainerService/fleets@2024-04-01' = {
   name: name
   location: location
   properties: {

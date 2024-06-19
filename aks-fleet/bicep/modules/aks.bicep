@@ -8,7 +8,7 @@ param identityId string
 param nodeSku string = 'Standard_D2s_v3'
 param fleetName string
 
-resource aksCluster 'Microsoft.ContainerService/managedClusters@2022-09-01' = {
+resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-03-02-preview' = {
   name: name
   location: location
   identity: {
@@ -28,7 +28,6 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2022-09-01' = {
       podCidr: podSubnetId
       serviceCidr: '10.240.0.0/24'
       dnsServiceIP: '10.240.0.10'
-      dockerBridgeCidr: '172.17.0.1/16'
     }
     agentPoolProfiles: [
       {

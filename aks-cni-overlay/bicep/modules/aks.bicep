@@ -41,6 +41,7 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-02-01' = {
         vmSize: nodeSku
         orchestratorVersion: kubernetesVersion
         vnetSubnetID: nodeSubnetId
+        osDiskType: 'Ephemeral' 
       }
     ]
   }
