@@ -1,0 +1,8 @@
+apiVersion: networking.fleet.azure.com/v1alpha1
+kind: MultiClusterService
+metadata:
+  name: cluster-info-app-mcs
+  namespace: cluster-info
+spec:
+  serviceImport:
+    name: cluster-info-app-service

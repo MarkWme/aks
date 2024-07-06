@@ -19,11 +19,17 @@ param kubernetesVersion string
 param uniqueSeed string = '${subscription().subscriptionId}-${resourceGroup().name}'
 param name string = 'aks-${uniqueString(uniqueSeed)}'
 
+@description('Tags for resources')
+param tags object = {
+  role: 'aks-fleet'
+}
+
 module aksFleet 'modules/fleet.bicep' = {
   name: '${deployment().name}--fleet'
   params: {
     name: '${name}-fm'
     location: primaryLocation
+    tags: tags
   }
 }
 

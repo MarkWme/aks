@@ -51,6 +51,7 @@ module aksFleet 'fleetmember.bicep' = {
   params: {
     name: fleetName
     clusterId: aksCluster.id
+    group: location
   }
 }
 

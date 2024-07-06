@@ -1,7 +1,8 @@
 param name string
 param location string
+param tags object
 
-resource aksFleet 'Microsoft.ContainerService/fleets@2024-04-01' = {
+resource aksFleet 'Microsoft.ContainerService/fleets@2024-02-02-preview' = {
   name: name
   location: location
   properties: {
@@ -9,6 +10,7 @@ resource aksFleet 'Microsoft.ContainerService/fleets@2024-04-01' = {
       dnsPrefix: name
     }
   }
+  tags: tags
 }
 
 output name string = aksFleet.name
