@@ -1,0 +1,30 @@
+apiVersion: placement.kubernetes-fleet.io/v1alpha1
+kind: ClusterResourceOverride
+metadata:
+  name: istio-network-cro
+spec:
+  clusterResourceSelectors:
+    - group: ''
+      kind: Namespace
+      version: v1
+      name: istio-system
+  policy:
+    overrideRules:
+      - clusterSelector:
+          clusterSelectorTerms:
+            - labelSelector:
+                matchLabels:
+                  fleet.azure.com/location: northeurope
+        jsonPatchOverrides:
+          - op: add
+            path: /metadata/labels/topology.istio.io~1network
+            value: northeurope
+      - clusterSelector:
+          clusterSelectorTerms:
+            - labelSelector:
+                matchLabels:
+                  fleet.azure.com/location: uksouth
+        jsonPatchOverrides:
+          - op: add
+            path: /metadata/labels/topology.istio.io~1network
+            value: uksouth

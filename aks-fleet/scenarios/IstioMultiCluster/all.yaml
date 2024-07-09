@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: istio-system
+---
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ClusterResourcePlacement
+metadata:
+  name: istio-system-namespace-crp
+spec:
+  resourceSelectors:
+    - group: ""
+      kind: Namespace
+      version: v1          
+      name: istio-system
+  policy:
+    placementType: PickAll
+---
+apiVersion: placement.kubernetes-fleet.io/v1alpha1
+kind: ClusterResourceOverride
+metadata:
+  name: istio-network-cro
+spec:
+  clusterResourceSelectors:
+    - group: ''
+      kind: Namespace
+      version: v1
+      name: istio-system
+  policy:
+    overrideRules:
+      - clusterSelector:
+          clusterSelectorTerms:
+            - labelSelector:
+                matchLabels:
+                  fleet.azure.com/location: northeurope
+        jsonPatchOverrides:
+          - op: add
+            path: /metadata/labels/topology.istio.io~1network
+            value: northeurope
+      - clusterSelector:
+          clusterSelectorTerms:
+            - labelSelector:
+                matchLabels:
+                  fleet.azure.com/location: uksouth
+        jsonPatchOverrides:
+          - op: add
+            path: /metadata/labels/topology.istio.io~1network
+            value: uksouth
+---
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ClusterResourcePlacement
+metadata:
+  name: istio-system-namespace-cro-crp
+spec:
+  resourceSelectors:
+    - group: ""
+      kind: Namespace
+      version: v1
+      name: istio-system
+  policy:
+    placementType: PickAll
+    affinity:
+      clusterAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          clusterSelectorTerms:
+            - labelSelector:
+                matchExpressions:
+                - {key: fleet.azure.com/location, operator: In, values: [northeurope, uksouth]}

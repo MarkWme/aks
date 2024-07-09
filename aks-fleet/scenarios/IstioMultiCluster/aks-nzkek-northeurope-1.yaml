@@ -1,0 +1,9 @@
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+spec:
+  values:
+    global:
+      meshID: mesh-northeurope
+      multiCluster:
+        clusterName: aks-kzkek-northeurope-1
+      network: northeurope

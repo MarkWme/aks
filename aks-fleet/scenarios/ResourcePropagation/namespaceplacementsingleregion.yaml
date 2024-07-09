@@ -10,6 +10,13 @@ spec:
       name: cluster-info
   policy:
     placementType: PickAll
+    affinity:
+      clusterAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          clusterSelectorTerms:
+          - labelSelector:
+              matchLabels:
+                fleet.azure.com/location: northeurope
   strategy:
     type: RollingUpdate
     rollingUpdate:

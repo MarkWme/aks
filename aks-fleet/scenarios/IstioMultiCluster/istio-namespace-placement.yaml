@@ -1,12 +1,12 @@
 apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ClusterResourcePlacement
 metadata:
-  name: cluster-info-namespace-crp
+  name: istio-system-namespace-crp
 spec:
   resourceSelectors:
     - group: ""
       kind: Namespace
       version: v1          
-      name: cluster-info
+      name: istio-system
   policy:
     placementType: PickAll
