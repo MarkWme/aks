@@ -1,0 +1,69 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: clusterapp-service-account
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: node-reader
+rules:
+- apiGroups: [""]
+  resources: ["nodes","configmaps"]
+  verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: read-node-info
+subjects:
+- kind: ServiceAccount
+  name: clusterapp-service-account
+  namespace: default
+roleRef:
+  kind: ClusterRole
+  name: node-reader
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clusterapp-deployment
+  labels:
+    app: clusterapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: clusterapp
+  template:
+    metadata:
+      labels:
+        app: clusterapp
+    spec:
+      serviceAccountName: clusterapp-service-account
+      containers:
+      - name: clusterapp
+        image: msazuredev.azurecr.io/clusterapp:latest
+        imagePullPolicy: Always
+        env:
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        ports:
+        - containerPort: 5195
+      imagePullSecrets:
+      - name: azurecr-io
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: clusterapp-service
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 5195
+  selector:
+    app: clusterapp
