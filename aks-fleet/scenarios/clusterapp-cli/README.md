@@ -12,6 +12,6 @@ The app expects and IP address for the API endpoint and a number of iterations t
 
 For example
 
-`dotnet run 1.2.3.4 20`
+`dotnet run -- 1.2.3.4 20`
 
 Will run the app, use `1.2.3.4` as the API endpoint and will attempt to call it 20 times.

@@ -29,8 +29,8 @@ class Program
         {
             Timeout = TimeSpan.FromSeconds(5) // Set timeout to 5 seconds
         };
-        Console.WriteLine($"{"Cluster",-35} {"Region",-15} {"Node",-30} {"Pod",-45} {"IP",-15}");
-        Console.WriteLine(new string('-', 140));
+        Console.WriteLine($"{"Count",-6} {"Cluster",-35} {"Region",-15} {"Node",-30} {"Pod",-45} {"IP",-15}");
+        Console.WriteLine(new string('-', 150));
         for (int i = 0; i < n; i++)
         {
             try
@@ -40,7 +40,7 @@ class Program
                 HttpResponseMessage response = await client.SendAsync(requestMessage);
                 string result = await response.Content.ReadAsStringAsync();
                 var clusterInfo = JsonConvert.DeserializeObject<ClusterInfo>(result);
-                Console.WriteLine($"{clusterInfo?.Cluster,-35} {clusterInfo?.Region,-15} {clusterInfo?.Node,-30} {clusterInfo?.Pod,-45} {clusterInfo?.Ip,-15}");
+                Console.WriteLine($"{i+1,-6} {clusterInfo?.Cluster,-35} {clusterInfo?.Region,-15} {clusterInfo?.Node,-30} {clusterInfo?.Pod,-45} {clusterInfo?.Ip,-15}");
             }
             catch (TaskCanceledException)
             {

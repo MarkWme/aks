@@ -19,3 +19,8 @@ Below are links to walkthroughs of scenarios that can be tested with this deploy
 
 Due to some issues with how subnets are provisioned by the Azure Resource Manager, it does not appear to be possible to redeploy this template in an idempotent way. It seems that when the subnets are first defined, all is well. When AKS is first deployed to that subnet, it creates a delegation. When attempting to redeploy the template, it seems that the presence of the delegation causes an error, possibly because the deployment process tries to remove the delegation because it's not part of the deployment template. I tried to add the delegation to the template, which then fixes the redeploy scenario but breaks the initial deployment scenario as AKS fails because it can't be deployed to a subnet that has existing delegations, even if it is an AKS delegation.
 
+## To Do
+
+- Attach ACR to each of the clusters during deployment
+- Peer the virtual networks
+- Assign dev/test/prod Update Groups during deployment
