@@ -1,0 +1,87 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: azwi-qs-ns
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-dns
+  namespace: azwi-qs-ns
+spec:
+  podSelector: {}
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-allow-mds
+  namespace: azwi-qs-ns
+  annotations:
+    kubernetes.io/description: "required for native workload identity"
+spec:
+  podSelector: {}
+  egress:
+    - to:
+        # Azure Instance Metadata Service
+        # https://learn.microsoft.com/en-us/azure/virtual-machines/instance-metadata-service?tabs=linux
+        - ipBlock:
+            cidr: 169.254.169.254/32
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-allow-azureplatfdorm
+  namespace: azwi-qs-ns
+  annotations:
+    kubernetes.io/description: "required for communication with Azure platform resources"
+spec:
+  podSelector: {}
+  egress:
+    - to:
+        # Azure platform resources
+        # https://learn.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16
+        - ipBlock:
+            cidr: 168.63.129.16/32
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-allow-private-endpoint
+  namespace: azwi-qs-ns
+spec:
+  podSelector: {}
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 10.171.0.7/32
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-oidc
+  namespace: azwi-qs-ns
+  annotations:
+    kubernetes.io/description: "required for communication with Azure platform resources"
+spec:
+  podSelector: {}
+  egress:
+    - to:
+        # Azure platform resources
+        # https://learn.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16
+        - ipBlock:
+            cidr: 40.126.32.0/24

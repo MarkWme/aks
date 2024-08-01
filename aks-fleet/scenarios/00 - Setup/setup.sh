@@ -19,7 +19,7 @@ echo "Creating role assignment for user $userId on fleet $fleetId"
 az role assignment create --role "Azure Kubernetes Fleet Manager RBAC Cluster Admin" --assignee ${userId} --scope ${fleetId}
 
 echo "Waiting for role assignment to propagate..."
-# sleep 30  
+sleep 30  
 
 # Get the list of member clusters
 
@@ -32,7 +32,7 @@ echo "$clusterNames" | while read clusterName; do
         echo "Getting cluster credentials for $clusterName"
         az aks get-credentials -g $resourceGroup -n $clusterName --overwrite-existing > /dev/null 2>&1
         echo "Attaching Azure Container Registry $acrName.azurecr.io to $clusterName"
-        #az aks update -g $resourceGroup -n $clusterName --attach-acr $acrName -o table > /dev/null 2>&1
+        az aks update -g $resourceGroup -n $clusterName --attach-acr $acrName -o table > /dev/null 2>&1
         echo "Applying ConfigMap to $clusterName"
         # Apply the ConfigMap directly without a temporary file
         kubectl apply -f - <<EOF
