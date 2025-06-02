@@ -3,7 +3,7 @@
 #
 # AKS cluster
 #
-location=swedencentral
+location=uksouth
 #
 # Choose random name for resources
 #

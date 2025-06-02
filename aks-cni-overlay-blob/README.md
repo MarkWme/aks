@@ -3,3 +3,4 @@
 3 node AKS cluster
 CNI overlay
 Cilium
+Blob CSI enabled
