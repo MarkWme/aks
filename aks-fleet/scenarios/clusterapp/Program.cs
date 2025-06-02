@@ -35,7 +35,9 @@ app.MapGet("/hostinfo", async () =>
 
     var configMapName = "cluster-info"; // Replace with your ConfigMap name
     var configMapKey = "cluster-name"; // Replace with the key you want to read
-    var clusterInfoNamespace = "kube-system"; // Namespace where your ConfigMap is located
+    var clusterInfoNamespace = "default"; // Namespace where your ConfigMap is located
+
+    Console.WriteLine($"Reading config map {configMapName} in namespace {clusterInfoNamespace}...");
     var configMap = await client.ReadNamespacedConfigMapAsync(configMapName, clusterInfoNamespace);
     configMap.Data.TryGetValue(configMapKey, out var clusterName);
 
