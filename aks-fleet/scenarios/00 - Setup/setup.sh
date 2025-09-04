@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# You may need to run the `api-access.sh` script in the `AccessFleetManagerK8sAPI` scenario before running this script. This will ensure that the necessary RBAC roles have been applied.
+# You may need to run the `api-access.sh` script in the `00 - AccessFleetManagerK8sAPI` scenario before running this script. This will ensure that the necessary RBAC roles have been applied.
 
 # Connect to the Fleet hub cluster
 
