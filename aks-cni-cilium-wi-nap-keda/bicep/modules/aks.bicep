@@ -6,7 +6,7 @@ param nodeSubnetId string
 param identityId string
 param nodeSku string = 'Standard_D2s_v5'
 
-resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-02-01' = {
+resource aksCluster 'Microsoft.ContainerService/managedClusters@2025-03-02-preview' = {
   name: name
   location: location
   identity: {
@@ -30,6 +30,11 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-02-01' = {
       serviceCidr: '10.240.0.0/24'
       dnsServiceIP: '10.240.0.10'
     }
+    metricsProfile: {
+      costAnalysis: {
+        enabled: true
+      }
+    }
     agentPoolProfiles: [
       {
         name: 'sys'
@@ -43,13 +48,26 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-02-01' = {
         vnetSubnetID: nodeSubnetId
       }
     ]
-  securityProfile: {
-    workloadIdentity: {
-      enabled: true
+    nodeProvisioningProfile: {
+      mode: 'Auto'
+    }
+    workloadAutoScalerProfile: {
+      keda: {
+        enabled: true
       }
     }
-  oidcIssuerProfile: {
-    enabled: true
+    securityProfile: {
+      workloadIdentity: {
+        enabled: true
+      }
+     }
+    oidcIssuerProfile: {
+      enabled: true
     }
   }
+  sku: {
+    name: 'Base'
+    tier: 'Standard'
+  }
+
 }
